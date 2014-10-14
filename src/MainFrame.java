@@ -36,65 +36,76 @@ public final class MainFrame extends JFrame{
         createGUI();
     }
 
+    public static void addComponentsToPane(Container pane) {
+        pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+    }
+
     public void createGUI() {
         setDefaultCloseOperation (JFrame.DISPOSE_ON_CLOSE);
 
 
-        Dimension labelSize = new Dimension(50, 20);
+        Dimension labelSize = new Dimension(100, 20);
         Border solidBorder = BorderFactory.createLineBorder(Color.BLACK, 1);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout());
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
 
         ipLabel = new JLabel("Адрес (IP):");
-        ipLabel.setPreferredSize(new Dimension(55, 20));
-        ipLabel.setHorizontalAlignment(JLabel.LEFT);
-        panel.add(ipLabel);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 0;
+        panel.add(ipLabel, c);
 
-        maskLabel = new JLabel("Битов или маска:");
-        maskLabel.setPreferredSize(labelSize);
-        //maskLabel.setHorizontalAlignment(JLabel.LEFT);
-        panel.add(maskLabel);
-        panel.add(spacer = new JLabel(" "),"span, grow");
+        maskLabel = new JLabel("Маска:");
+        c.weightx = 0;
+        c.gridx = 1;
+        c.gridy = 0;
+        panel.add(maskLabel,c);
+
 
         ipTextField = new JTextField();
-        ipTextField.setColumns(16);
-        ipTextField.setPreferredSize(labelSize);
+        /*ipTextField.setPreferredSize(labelSize);
         ipTextField.setHorizontalAlignment(JLabel.LEFT);
-        panel.add(ipTextField);
-        panel.add(new JLabel("/"));
+        panel.add(spacer = new JLabel(" "),"span, grow");*/
+        c.gridx = 0;
+        c.gridy = 1;
+        panel.add(ipTextField,c);
 
         maskTextField = new JTextField();
-        maskTextField.setColumns(20);
-        maskTextField.setPreferredSize(labelSize);
-        //maskTextField.setHorizontalAlignment(JLabel.LEFT);
-        panel.add(maskTextField);
+        c.gridx = 1;
+        c.gridy = 1;
+        panel.add(maskTextField,c);
 
-        maskButton = new JButton("Get mask");
-        maskButton.setHorizontalAlignment(JLabel.RIGHT);
+        maskButton = new JButton("??");
         maskButton.setActionCommand("Mask");
         ActionListener actionListener = new MaskActionListener();
         maskButton.addActionListener(actionListener);
-        panel.add(maskButton);
-        panel.add(spacer = new JLabel(" "),"span, grow");
+        c.gridx = 2;
+        c.gridy = 1;
+        panel.add(maskButton,c);
 
-        infoButton = new JButton("Информация");
-        //infoButton.setHorizontalAlignment(JLabel.LEFT);
+        infoButton = new JButton("Рассчитать");
         infoButton.setActionCommand("Info");
         ActionListener infoActionListener = new InfoActionListener();
         infoButton.addActionListener(infoActionListener);
-        panel.add(infoButton);
-        panel.add(spacer = new JLabel(" "),"span, grow");
+        c.ipady = 5;      //make this component tall
+        c.gridwidth = 3;
+        c.gridx = 0;
+        c.gridy = 2;
+        panel.add(infoButton,c);
+
 
         resultLabel = new JLabel();
-        resultLabel.setVerticalAlignment(JLabel.BOTTOM);
-        resultLabel.setHorizontalAlignment(JLabel.CENTER);
-        //resultLabel.setPreferredSize(new Dimension(300));
+        c.ipady = 10;      //make this component tall
+        c.gridwidth = 4;
+        c.gridx = 0;
+        c.gridy = 3;
         resultLabel.setBorder(solidBorder);
-        panel.add(resultLabel);
+        panel.add(resultLabel,c);
 
         getContentPane().add(panel);
-        setPreferredSize(new Dimension(320, 240));
+        //setPreferredSize(new Dimension(320, 240));
     }
 
     public class MaskActionListener implements ActionListener {
@@ -136,8 +147,9 @@ public final class MainFrame extends JFrame{
             public void run() {
                 JFrame.setDefaultLookAndFeelDecorated(true);
                 MainFrame frame = new MainFrame();
+                //Set up the content pane.
+                addComponentsToPane(frame.getContentPane());
                 frame.pack();
-                frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
 
                 // check mask
